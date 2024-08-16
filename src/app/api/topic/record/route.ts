@@ -10,7 +10,7 @@ interface RecordRequest {
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
+    const {searchParams} = new URL(request.url);
     const record = await prisma.record.findFirst({
         where: {
             userId: searchParams.get("userId") ?? "",
@@ -20,18 +20,18 @@ export async function GET(request: NextRequest) {
     if (!record) {
         return NextResponse.json({
             message: "Can't find record"
-        }, { status: 400 });
+        }, {status: 400});
     }
-    return NextResponse.json({ record }, { status: 200 });
+    return NextResponse.json({record}, {status: 200});
 }
 
 export async function POST(request: NextRequest) {
     try {
-        const { userId, topicId, choice } = (await request.json()) as RecordRequest;
+        const {userId, topicId, choice} =(await request.json()) as RecordRequest;
         if (!userId || !topicId || !choice) {
             return NextResponse.json({
                 message: "Bad Request"
-            }, { status: 400 });
+            }, {status: 400});
         }
 
         let record;
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
                     }
                 });
             }
-
+            
             const topic = await prisma.topic.findUnique({
                 where: {
                     id: topicId
@@ -99,11 +99,11 @@ export async function POST(request: NextRequest) {
         });
         return NextResponse.json({
             record
-        }, { status: 200 });
-    } catch (e) {
+        }, {status: 200});
+    } catch(e) {
         console.error("🚀 ~ file: route.ts:6 ~ POST ~ e:", e)
         return NextResponse.json({
             message: "Internal Error"
-        }, { status: 500 });
+        }, {status: 500});
     }
 }
